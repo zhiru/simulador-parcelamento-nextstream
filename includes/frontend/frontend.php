@@ -1,6 +1,7 @@
 <?php
 function simulador_parcelamento_nextstream_enqueue_scripts() {
-    wp_enqueue_script('simulador-parcelamento-scripts', plugins_url('assets/js/simulador.js', SPNEXT_DIR), array('jquery'), null, true);
+    //wp_enqueue_script('simulador-parcelamento-scripts', plugins_url('assets/js/simulador.js', SPNEXT_DIR), array('jquery'), null, true);
+    wp_enqueue_script(SPNEXT_SLUG . '-frontend-js', SPNEXT_URL . 'assets/js/simulador.js', array('jquery'), SPNEXT_VERSION, true);
 
     // Localize o script para passar dados para o JavaScript
     wp_localize_script('simulador-parcelamento-scripts', 'simulador_params', array(
@@ -12,7 +13,8 @@ add_action('wp_enqueue_scripts', 'simulador_parcelamento_nextstream_enqueue_scri
 
 // frontend.php
 function simulador_parcelamento_nextstream_enqueue_styles() {
-    wp_enqueue_style( 'simulador-parcelamento-styles', plugins_url( 'assets/css/style.css', SPNEXT_DIR ) );
+    // wp_enqueue_style( 'simulador-parcelamento-styles', plugins_url( 'assets/css/style.css', SPNEXT_DIR ) );    
+    wp_enqueue_style(SPNEXT_SLUG . '-frontend-css', SPNEXT_URL . 'assets/css/style.css', array(), SPNEXT_VERSION, 'all');
 }
 add_action( 'wp_enqueue_scripts', 'simulador_parcelamento_nextstream_enqueue_styles' );
 
