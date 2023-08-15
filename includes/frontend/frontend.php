@@ -1,14 +1,58 @@
 <?php
+function simulador_parcelamento_nextstream_enqueue_scripts() {
+    wp_enqueue_script('simulador-parcelamento-scripts', plugins_url('assets/js/simulador.js', __FILE__), array('jquery'), null, true);
+
+    // Localize o script para passar dados para o JavaScript
+    wp_localize_script('simulador-parcelamento-scripts', 'simulador_params', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+    ));
+}
+add_action('wp_enqueue_scripts', 'simulador_parcelamento_nextstream_enqueue_scripts');
+
+
 // frontend.php
 function simulador_parcelamento_nextstream_enqueue_styles() {
     wp_enqueue_style( 'simulador-parcelamento-styles', plugins_url( 'assets/css/style.css', __FILE__ ) );
 }
 add_action( 'wp_enqueue_scripts', 'simulador_parcelamento_nextstream_enqueue_styles' );
 
+function simulador_parcelamento_nextstream_update_simulacao_parcelas() {
+    $variation_id = isset($_POST['variation_id']) ? intval($_POST['variation_id']) : 0;
+    $variation = wc_get_product($variation_id);
+
+    if ($variation) {
+        $valor_produto = $variation->get_price();
+        // Resto do código de simulação, usando $valor_produto
+        echo simulador_parcelamento_nextstream_simulacao_parcelas($valor_produto); // A função que gera a simulação
+    }
+
+    wp_die();
+}
+add_action('wp_ajax_update_simulacao_parcelamento', 'simulador_parcelamento_nextstream_update_simulacao_parcelas');
+add_action('wp_ajax_nopriv_update_simulacao_parcelamento', 'simulador_parcelamento_nextstream_update_simulacao_parcelas');
+
+
 // Função para gerar a simulação de parcelamento
-function simulador_parcelamento_nextstream_simulacao_parcelas()
+function simulador_parcelamento_nextstream_simulacao_parcelas($valor_produto = null)
 {
-    $valor_produto = get_post_meta(get_the_ID(), '_sale_price', true);
+	
+    $product_id = get_the_ID();
+    $product = wc_get_product($product_id);
+	
+    // Se $valor_produto não foi definido, obtenha o preço do produto
+    if ($valor_produto === null) {
+        // $valor_produto = get_post_meta(get_the_ID(), '_sale_price', true);
+
+        // Verifica se o produto é variável
+        if ($product->is_type('variable')) {
+            // Obtém o preço mínimo e máximo para variações
+            $valor_produto = $product->get_variation_price('min');
+        } else {
+            // Produto simples, pegue o preço de venda
+            $valor_produto = get_post_meta($product_id, '_sale_price', true);
+        }
+    }
+	
     $valor_minimo_parcela = get_option('valor_minimo_parcela');
 
     // Obter as opções de estilo
@@ -23,8 +67,8 @@ function simulador_parcelamento_nextstream_simulacao_parcelas()
     $tamanho_fonte_valor_parcelas = get_option('tamanho_fonte_valor_parcelas');
     $peso_fonte_valor_parcelas = get_option('peso_fonte_valor_parcelas');
     $cor_fonte_valor_parcelas = get_option('cor_fonte_valor_parcelas');
-
-    // Inicializando a variável com o padrão de 0 parcelas sem juros
+	
+	// Inicializando a variável com o padrão de 0 parcelas sem juros
     $parcelas_sem_juros = 0;
 
     // Verificando quantos campos do 'juros_parcela_'.$i estão com o valor vazio ou 0
