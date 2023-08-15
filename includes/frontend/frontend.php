@@ -24,6 +24,17 @@ function simulador_parcelamento_nextstream_simulacao_parcelas()
     $peso_fonte_valor_parcelas = get_option('peso_fonte_valor_parcelas');
     $cor_fonte_valor_parcelas = get_option('cor_fonte_valor_parcelas');
 
+    // Inicializando a variável com o padrão de 0 parcelas sem juros
+    $parcelas_sem_juros = 0;
+
+    // Verificando quantos campos do 'juros_parcela_'.$i estão com o valor vazio ou 0
+    for ($i = 1; $i <= 6; $i++) {
+        $juros_parcela = get_option('juros_parcela_' . $i);
+        if (empty($juros_parcela) || $juros_parcela == 0) {
+            $parcelas_sem_juros++;
+        }
+    }
+
     $simulacao = '<div class="simulador-parcelamento">';
     $simulacao .= '<div class="simulador-parcelamento-columns">';
     $simulacao .= '<div class="simulador-parcelamento-column">';
