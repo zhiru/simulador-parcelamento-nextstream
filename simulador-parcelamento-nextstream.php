@@ -2,7 +2,7 @@
 /*
 Plugin Name: Simulador de Parcelamento Nextstream
 Description: Plugin para adicionar funcionalidade de parcelamento personalizado ao WooCommerce.
-Version: 1.3.0
+Version: 1.3.1
 Author: Sylas Filho
 Author URI: https://nextstream.com.br
 */
@@ -14,7 +14,7 @@ if (! defined('ABSPATH'))
 
 define('SPNEXT_PATH', plugin_dir_path(__FILE__));
 define('SPNEXT_URL', plugin_dir_url(__FILE__));
-define('SPNEXT_VERSION', '1.3.0');
+define('SPNEXT_VERSION', '1.3.1');
 define('SPNEXT_NAME', 'Simulador de Parcelamento Nextstream');
 define('SPNEXT_SLUG', 'simulador-parcelamento-nextstream');
 
