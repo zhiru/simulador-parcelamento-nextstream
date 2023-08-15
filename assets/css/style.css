@@ -1,0 +1,22 @@
+.simulador-parcelamento {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.simulador-parcelamento-columns {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.simulador-parcelamento-column {
+    width: 50%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.simulador-parcelamento-item {
+    margin-bottom: 10px;
+}
+
+/* Adicione outras regras CSS de acordo com as suas necessidades */
