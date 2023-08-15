@@ -20,3 +20,7 @@
 }
 
 /* Adicione outras regras CSS de acordo com as suas necessidades */
+.simulador-parcelamento .loading {
+    font-size: 16px;
+    color: #888;
+}

@@ -1,22 +1,22 @@
 <?php
 function simulador_parcelamento_nextstream_enqueue_scripts() {
-    //wp_enqueue_script('simulador-parcelamento-scripts', plugins_url('assets/js/simulador.js', SPNEXT_DIR), array('jquery'), null, true);
-    wp_enqueue_script(SPNEXT_SLUG . '-frontend-js', SPNEXT_URL . 'assets/js/simulador.js', array('jquery'), SPNEXT_VERSION, true);
+	
+    // wp_enqueue_style( 'simulador-parcelamento-styles', SPNEXT_URL . 'assets/css/style.css' );    
+    wp_enqueue_style(SPNEXT_SLUG . '-frontend', SPNEXT_URL . 'assets/css/style.css');
+	
+    wp_enqueue_script(SPNEXT_SLUG. '-frontend', SPNEXT_URL . 'assets/js/simulador.js', array('jquery'), null, true);
+	
+    // wp_enqueue_script('simulador-parcelamento-scripts', plugins_url('assets/js/simulador.js', SPNEXT_PATH), array('jquery'), null, true);
+    // wp_enqueue_script(SPNEXT_SLUG . '-frontend', SPNEXT_URL . 'assets/js/simulador.js', array('jquery'), SPNEXT_VERSION, true);
 
     // Localize o script para passar dados para o JavaScript
-    wp_localize_script('simulador-parcelamento-scripts', 'simulador_params', array(
+    wp_localize_script(SPNEXT_SLUG . '-frontend', 'simulador_params', array(
         'ajax_url' => admin_url('admin-ajax.php'),
     ));
+	
 }
 add_action('wp_enqueue_scripts', 'simulador_parcelamento_nextstream_enqueue_scripts');
 
-
-// frontend.php
-function simulador_parcelamento_nextstream_enqueue_styles() {
-    // wp_enqueue_style( 'simulador-parcelamento-styles', plugins_url( 'assets/css/style.css', SPNEXT_DIR ) );    
-    wp_enqueue_style(SPNEXT_SLUG . '-frontend-css', SPNEXT_URL . 'assets/css/style.css', array(), SPNEXT_VERSION, 'all');
-}
-add_action( 'wp_enqueue_scripts', 'simulador_parcelamento_nextstream_enqueue_styles' );
 
 function simulador_parcelamento_nextstream_update_simulacao_parcelas() {
     $variation_id = isset($_POST['variation_id']) ? intval($_POST['variation_id']) : 0;
@@ -35,14 +35,13 @@ add_action('wp_ajax_nopriv_update_simulacao_parcelamento', 'simulador_parcelamen
 
 
 // Função para gerar a simulação de parcelamento
-function simulador_parcelamento_nextstream_simulacao_parcelas($valor_produto = null)
+function simulador_parcelamento_nextstream_simulacao_parcelas($valor_produto)
 {
-	
     $product_id = get_the_ID();
     $product = wc_get_product($product_id);
 	
     // Se $valor_produto não foi definido, obtenha o preço do produto
-    if ($valor_produto === null) {
+    if (empty($valor_produto) || $valor_produto === null) {
         // $valor_produto = get_post_meta(get_the_ID(), '_sale_price', true);
 
         // Verifica se o produto é variável
@@ -80,7 +79,7 @@ function simulador_parcelamento_nextstream_simulacao_parcelas($valor_produto = n
             $parcelas_sem_juros++;
         }
     }
-
+    
     $simulacao = '<div class="simulador-parcelamento">';
     $simulacao .= '<div class="simulador-parcelamento-columns">';
     $simulacao .= '<div class="simulador-parcelamento-column">';
